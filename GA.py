@@ -17,12 +17,11 @@ class GA():
             objectiveFunc: a function take an instance and return its objective value
                 np.array of shape (popSize, ) -> any type of number
             popSize: int, number of instances in the population
+            maxGene: number of different genes for each locus in one chromosome
             objective: "min" if you want to minimize the objective function
                        "max" if you want to maximize the objective function
             mutateProb: float in [0,1], the probability of mutation operator
             crossoverProb: float in [0,1], the probility of crossover operator
-            instanceLength: int, number of genes in one chromosome
-            lowBound, highBound: int, the range of any genes is [lowBound, highBound]
             crossoverMethod: in this version only accept "onePointCrossover"
             selectionMethod: in this version only accept "RWS"
         """
@@ -59,6 +58,7 @@ class GA():
                                                      high=self.maxGene[i], 
                                                      size = (1, self.popSize))
         self.allTimeBestInstance = self.population[0]
+        self.allTimeBestVal = self.objectiveFunc(self.allTimeBestInstance)
         self._eval()
     
     def _eval(self):
@@ -93,10 +93,10 @@ class GA():
         self._mutate()
         self._eval()
         self.history += [self.objectiveFunc(self.bestInstance())]
-        if self.objective=="min" and self.objectiveFunc(self.bestInstance()) < self.objectiveFunc(self.allTimeBestInstance):
+        if (self.objective=="min" and self.objectiveFunc(self.bestInstance()) < self.allTimeBestVal) or\
+           (self.objective=="max" and self.objectiveFunc(self.bestInstance()) > self.allTimeBestVal):
             self.allTimeBestInstance = self.bestInstance()
-        if self.objective=="max" and self.objectiveFunc(self.bestInstance()) > self.objectiveFunc(self.allTimeBestInstance):
-            self.allTimeBestInstance = self.bestInstance()
+            self.allTimeBestVal = self.objectiveFunc(self.bestInstance())
 
     def fit(self, numGen):
         for _ in repeat(None, numGen):
