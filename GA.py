@@ -1,5 +1,5 @@
 import numpy as np
-import GeneticOpertors
+from .GeneticOpertors import CrossoverMethod, SelectionMethod
 from itertools import repeat
 
 class GA():
@@ -45,12 +45,12 @@ class GA():
         self.instanceLength = instanceLength
         
         if crossoverMethod == "onePointCrossover":
-            self.crossover = GeneticOpertors.CrossoverMethod.onePointCrossover
+            self.crossover = CrossoverMethod.onePointCrossover
         else:
             raise NotImplementedError
 
         if selectionMethod == "RWS":
-            self.selectionMethod = GeneticOpertors.SelectionMethod.RWS
+            self.selectionMethod = SelectionMethod.RWS
         else:
             raise NotImplementedError
         
