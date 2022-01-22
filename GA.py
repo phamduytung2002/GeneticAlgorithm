@@ -6,12 +6,10 @@ class GA():
     def __init__(self, 
                 objectiveFunc, 
                 popSize,
+                maxGene,
                 objective = "min",
                 mutateProb = 0.001, 
                 crossoverProb = 0.9, 
-                instanceLength = 5,
-                lowBound = 0,
-                highBound = 9,
                 crossoverMethod = "onePointCrossover",
                 selectionMethod = "RWS"):
     
@@ -39,10 +37,8 @@ class GA():
         self.mutateProb = mutateProb
         self.crossoverProb = crossoverProb
         self.popSize = popSize
-        self.lowBound = lowBound
-        self.highBound = highBound 
-        self.rangeLength = highBound+1-lowBound
-        self.instanceLength = instanceLength
+        self.maxGene = maxGene
+        self.instanceLength = len(self.maxGene)
         
         if crossoverMethod == "onePointCrossover":
             self.crossover = CrossoverMethod.onePointCrossover
@@ -55,10 +51,12 @@ class GA():
             raise NotImplementedError
         
 
-        self.fitVal = np.ones((self.popSize, ))
-        self.population = np.random.randint(low=self.lowBound, 
-                                            high=self.highBound+1, 
-                                            size=(self.popSize, self.instanceLength))
+        self.fitVal = np.random.randint(low=0, high=1, size=(self.popSize, ))
+        self.population = np.random.randint(low=0, high=1, size=(self.popSize, self.instanceLength))
+        for i in range (self.instanceLength):
+            self.population[:,i] = np.random.randint(low=0, 
+                                                     high=self.maxGene[i], 
+                                                     size = (1, self.popSize))
         self._eval()
     
     def _eval(self):
@@ -71,9 +69,10 @@ class GA():
         mutate = np.random.choice(range(2), 
                                   size=self.population.shape, 
                                   p=[1-self.mutateProb, self.mutateProb])
-        increase = np.random.choice(range(self.lowBound,self.highBound+1), 
+        increase = np.random.randint(low=0, high = np.max(self.maxGene), 
                                     size=self.population.shape)
-        self.population = (self.population + mutate*increase)%self.rangeLength
+            #this way of random can be bias
+        self.population = (self.population + mutate*increase)%self.maxGene
 
     def _parentSelection(self):
         selectedIndex = self.selectionMethod(self.fitVal)
