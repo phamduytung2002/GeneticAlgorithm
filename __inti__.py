@@ -1,0 +1,2 @@
+import GeneticAlgorithm.GeneticOpertors
+from GeneticAlgorithm.GA import GA
