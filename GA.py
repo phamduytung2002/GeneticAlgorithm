@@ -39,6 +39,7 @@ class GA():
         self.popSize = popSize
         self.maxGene = maxGene
         self.instanceLength = len(self.maxGene)
+        self.history = []
         
         if crossoverMethod == "onePointCrossover":
             self.crossover = CrossoverMethod.onePointCrossover
@@ -57,6 +58,7 @@ class GA():
             self.population[:,i] = np.random.randint(low=0, 
                                                      high=self.maxGene[i], 
                                                      size = (1, self.popSize))
+        self.allTimeBestInstance = self.population[0]
         self._eval()
     
     def _eval(self):
@@ -90,10 +92,15 @@ class GA():
         self._crossoverPop()
         self._mutate()
         self._eval()
+        self.history += [self.objectiveFunc(self.bestInstance())]
+        if self.objective=="min" and self.objectiveFunc(self.bestInstance()) < self.objectiveFunc(self.allTimeBestInstance):
+            self.allTimeBestInstance = self.bestInstance()
+        if self.objective=="max" and self.objectiveFunc(self.bestInstance()) > self.objectiveFunc(self.allTimeBestInstance):
+            self.allTimeBestInstance = self.bestInstance()
 
     def fit(self, numGen):
         for _ in repeat(None, numGen):
             self._nextGen()
 
-    def BestInstance(self):
+    def bestInstance(self):
         return self.population[np.argmax(self.fitVal)]
