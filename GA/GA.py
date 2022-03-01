@@ -15,9 +15,9 @@ class GA():
     
         """
             objectiveFunc: a function take an instance and return its objective value
-                np.array of shape (popSize, ) -> any type of number
+                np.array of shape (popSize, ) -> number
             popSize: int, number of instances in the population
-            maxGene: number of different genes for each locus in one chromosome
+            maxGene: number of different genes for each locus in one instance
             objective: "min" if you want to minimize the objective function
                        "max" if you want to maximize the objective function
             mutateProb: float in [0,1], the probability of mutation operator
@@ -73,7 +73,6 @@ class GA():
                                   p=[1-self.mutateProb, self.mutateProb])
         increase = np.random.randint(low=0, high = np.max(self.maxGene), 
                                     size=self.population.shape)
-            #this way of random can be bias
         self.population = (self.population + mutate*increase)%self.maxGene
 
     def _parentSelection(self):

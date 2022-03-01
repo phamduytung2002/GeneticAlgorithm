@@ -12,3 +12,9 @@ def onePointCrossover(instanceA, instanceB, crossoverProb):
             instanceA[pos:], instanceB[pos:] = instanceB[pos:], instanceA[pos:]
 
         return instanceA, instanceB
+
+def multiplePointCrossover(instanceA, instanceB, crossoverProb):
+        raise NotImplementedError
+
+def uniformCrossover(instanceA, instanceB, crossoverProb):
+        raise NotImplementedError

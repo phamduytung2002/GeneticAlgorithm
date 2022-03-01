@@ -13,4 +13,4 @@ def RWS(fitVal):
     return selectedIndex
 
 def tournamentSelection(fitVal):
-    return NotImplementedError
+    raise NotImplementedError
